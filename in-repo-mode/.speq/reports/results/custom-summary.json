@@ -1,0 +1,17 @@
+{
+  "durationMs": 636,
+  "startedAtMs": 1775318156078,
+  "status": "passed",
+  "tests": [
+    {
+      "durationMs": 636,
+      "id": "smoke.health",
+      "status": "passed"
+    }
+  ],
+  "totals": {
+    "failed": 0,
+    "passed": 1,
+    "total": 1
+  }
+}
