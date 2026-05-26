@@ -14,3 +14,7 @@ coverage/
 .venv/
 __pycache__/
 *.pyc
+
+# Test report artifacts
+test-repo-mode-jsonplaceholder/reports/allure/
+test-repo-mode-jsonplaceholder/reports/results/
