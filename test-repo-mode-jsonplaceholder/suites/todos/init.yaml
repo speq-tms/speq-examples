@@ -1,0 +1,19 @@
+suite:
+  variables:
+    todoId: 1
+  beforeEach:
+    - type: api
+      name: "Setup todos: GET /todos/{{todoId}}"
+      method: GET
+      url: "/todos/{{todoId}}"
+      assert:
+        - type: status
+          expected: 200
+  afterEach:
+    - type: api
+      name: "Teardown todos: GET /todos/{{todoId}}"
+      method: GET
+      url: "/todos/{{todoId}}"
+      assert:
+        - type: status
+          expected: 200

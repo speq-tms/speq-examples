@@ -1,0 +1,19 @@
+id: "comments.smoke.get-by-id"
+title: "Comments smoke: use module action + schema"
+tags:
+  - smoke
+  - api
+  - comments
+  - modules
+  - schema
+imports:
+  - module: jsonplaceholder
+    alias: jp
+variables:
+  targetCommentId: 1
+steps:
+  - type: use
+    name: "Use action jp.getCommentById"
+    action: "jp.getCommentById"
+    properties:
+      commentId: "{{targetCommentId}}"

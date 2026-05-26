@@ -1,0 +1,13 @@
+id: "posts.get.retry-config"
+title: "Posts: GET post demonstrating global retry config (Feature 3)"
+tags: [api, posts, retry]
+steps:
+  - type: api
+    name: "GET /posts/1 with global retry config active"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"

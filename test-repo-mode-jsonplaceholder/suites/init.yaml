@@ -1,0 +1,32 @@
+suite:
+  variables:
+    healthPath: "/todos/1"
+    warmupPostId: 1
+  imports:
+    - module: jsonplaceholder
+      alias: jp
+  beforeAll:
+    - type: use
+      name: "Warmup via module action"
+      action: "jp.getPostById"
+      properties:
+        postId: "{{warmupPostId}}"
+    - type: api
+      name: "Setup probe: GET {{healthPath}}"
+      method: GET
+      url: "{{healthPath}}"
+      assert:
+        - type: status
+          expected: 200
+        - type: schema
+          ref: "jsonplaceholder/todo.schema.json"
+  afterAll:
+    - type: api
+      name: "Teardown probe: GET {{healthPath}}"
+      method: GET
+      url: "{{healthPath}}"
+      assert:
+        - type: status
+          expected: 200
+        - type: schema
+          ref: "jsonplaceholder/todo.schema.json"

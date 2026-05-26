@@ -1,0 +1,8 @@
+fixture:
+  build:
+    userId:
+      gen: { type: int, min: 1, max: 10 }
+    title:
+      gen: { type: string, minLength: 5, maxLength: 40 }
+    completed:
+      gen: { type: bool }

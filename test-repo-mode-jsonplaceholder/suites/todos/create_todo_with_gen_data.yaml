@@ -1,0 +1,18 @@
+id: "todos.create.gen-data"
+title: "Todos: create todo with generated data (Feature 1)"
+tags: [api, todos, data-generation]
+steps:
+  - type: api
+    name: "POST /todos with gen body"
+    method: POST
+    url: "/todos"
+    body:
+      userId:
+        gen: { type: int, min: 1, max: 10 }
+      title:
+        gen: { type: string, minLength: 5, maxLength: 40 }
+      completed:
+        gen: { type: bool }
+    assert:
+      - type: status
+        expected: 201

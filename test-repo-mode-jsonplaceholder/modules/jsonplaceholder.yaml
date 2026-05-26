@@ -1,0 +1,74 @@
+actions:
+  getPostById:
+    properties:
+      - postId
+    steps:
+      - type: api
+        id: get_post
+        name: "GET /posts/{{postId}}"
+        method: GET
+        url: "/posts/{{postId}}"
+        assert:
+          - type: status
+            expected: 200
+          - type: schema
+            ref: "jsonplaceholder/post.schema.json"
+    returns:
+      postId: "$steps.get_post.response.body.id"
+      userId: "$steps.get_post.response.body.userId"
+      title: "$steps.get_post.response.body.title"
+
+  getUserById:
+    properties:
+      - userId
+    steps:
+      - type: api
+        id: get_user
+        name: "GET /users/{{userId}}"
+        method: GET
+        url: "/users/{{userId}}"
+        assert:
+          - type: status
+            expected: 200
+          - type: schema
+            ref: "jsonplaceholder/user.schema.json"
+    returns:
+      userId: "$steps.get_user.response.body.id"
+      name: "$steps.get_user.response.body.name"
+      email: "$steps.get_user.response.body.email"
+
+  getCommentById:
+    properties:
+      - commentId
+    steps:
+      - type: api
+        id: get_comment
+        name: "GET /comments/{{commentId}}"
+        method: GET
+        url: "/comments/{{commentId}}"
+        assert:
+          - type: status
+            expected: 200
+          - type: schema
+            ref: "jsonplaceholder/comment.schema.json"
+    returns:
+      commentId: "$steps.get_comment.response.body.id"
+      postId: "$steps.get_comment.response.body.postId"
+
+  getAlbumById:
+    properties:
+      - albumId
+    steps:
+      - type: api
+        id: get_album
+        name: "GET /albums/{{albumId}}"
+        method: GET
+        url: "/albums/{{albumId}}"
+        assert:
+          - type: status
+            expected: 200
+          - type: schema
+            ref: "jsonplaceholder/album.schema.json"
+    returns:
+      albumId: "$steps.get_album.response.body.id"
+      userId: "$steps.get_album.response.body.userId"

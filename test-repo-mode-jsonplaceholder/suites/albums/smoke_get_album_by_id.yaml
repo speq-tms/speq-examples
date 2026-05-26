@@ -1,0 +1,26 @@
+id: "albums.smoke.get-by-id"
+title: "Albums smoke: use module action + schema"
+tags:
+  - smoke
+  - api
+  - albums
+  - modules
+  - schema
+imports:
+  - module: jsonplaceholder
+    alias: jp
+variables:
+  targetAlbumId: 1
+steps:
+  - type: use
+    name: "Use action jp.getAlbumById"
+    action: "jp.getAlbumById"
+    properties:
+      albumId: "{{targetAlbumId}}"
+  - type: api
+    name: "Step without Use"
+    method: GET
+    url: "/albums/{{targetAlbumId}}"
+    assert:
+      - type: status
+        expected: 200

@@ -1,0 +1,14 @@
+id: "posts.module-output.legacy"
+title: "Posts: legacy use without as/returns (backward compat, Feature 4)"
+tags: [api, posts, module-outputs, legacy]
+imports:
+  - module: jsonplaceholder
+    alias: jp
+variables:
+  targetPostId: 1
+steps:
+  - type: use
+    name: "Legacy use jp.getPostById without as"
+    action: "jp.getPostById"
+    properties:
+      postId: "{{targetPostId}}"

@@ -1,0 +1,18 @@
+id: "todos.waiter.condition"
+title: "Todos: waiter condition on userId field (Feature 3)"
+tags: [api, todos, waiter, retry]
+steps:
+  - type: api
+    name: "GET /todos/1 - wait until userId equals 1"
+    method: GET
+    url: "/todos/1"
+    condition:
+      type: jsonpath
+      path: "$.userId"
+      equals: 1
+      wait:
+        timeoutMs: 5000
+        intervalMs: 500
+    assert:
+      - type: status
+        expected: 200

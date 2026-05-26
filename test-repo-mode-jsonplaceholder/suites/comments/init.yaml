@@ -1,0 +1,20 @@
+suite:
+  variables:
+    commentId: 1
+  imports:
+    - module: jsonplaceholder
+      alias: jp
+  beforeEach:
+    - type: use
+      name: "Setup comments via module action"
+      action: "jp.getCommentById"
+      properties:
+        commentId: "{{commentId}}"
+  afterEach:
+    - type: api
+      name: "Teardown comments: GET /comments/{{commentId}}"
+      method: GET
+      url: "/comments/{{commentId}}"
+      assert:
+        - type: status
+          expected: 200

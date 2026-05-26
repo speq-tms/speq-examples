@@ -8,6 +8,7 @@ This repository provides fixtures and sample layouts for:
 
 - `in-repo` mode (`.speq` inside service repository);
 - `test-repo` mode (dedicated test repository root).
+- `test-repo` mode for public JSONPlaceholder API with entity-based suites.
 
 ## Planned structure
 
@@ -20,6 +21,12 @@ in-repo-mode/
 test-repo-mode/
   environments/
   suites/
+  reports/
+test-repo-mode-jsonplaceholder/
+  environments/
+  suites/
+    users/
+    posts/
   reports/
 docs/
 ```

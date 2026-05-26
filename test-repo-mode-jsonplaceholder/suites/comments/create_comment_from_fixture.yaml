@@ -1,0 +1,17 @@
+id: "comments.create.fixture"
+title: "Comments: create comment from fixture (Feature 2)"
+tags: [api, comments, fixtures]
+steps:
+  - type: api
+    name: "POST /comments from fixture"
+    method: POST
+    url: "/comments"
+    bodyFromFixture:
+      ref: "comment-create.yaml"
+      overrides:
+        postId: 1
+    assert:
+      - type: status
+        expected: 201
+      - type: schema
+        ref: "jsonplaceholder/comment.schema.json"

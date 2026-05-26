@@ -1,0 +1,20 @@
+id: "posts.create.gen-data"
+title: "Posts: create post with generated data (Feature 1)"
+tags: [api, posts, data-generation]
+steps:
+  - type: api
+    name: "POST /posts with gen body"
+    method: POST
+    url: "/posts"
+    body:
+      title:
+        gen: { type: string, minLength: 10, maxLength: 50 }
+      body:
+        gen: { type: string, minLength: 20, maxLength: 100 }
+      userId:
+        gen: { type: int, min: 1, max: 10 }
+    assert:
+      - type: status
+        expected: 201
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"

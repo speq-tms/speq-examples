@@ -1,0 +1,19 @@
+id: "posts.smoke.get-by-id"
+title: "Posts smoke: use module action + schema"
+tags:
+  - smoke
+  - api
+  - posts
+  - modules
+  - schema
+imports:
+  - module: jsonplaceholder
+    alias: jp
+variables:
+  targetPostId: 1
+steps:
+  - type: use
+    name: "Use action jp.getPostById"
+    action: "jp.getPostById"
+    properties:
+      postId: "{{targetPostId}}"

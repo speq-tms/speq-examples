@@ -1,0 +1,17 @@
+id: "posts.create.fixture"
+title: "Posts: create post from fixture with overrides (Feature 2)"
+tags: [api, posts, fixtures]
+steps:
+  - type: api
+    name: "POST /posts from fixture"
+    method: POST
+    url: "/posts"
+    bodyFromFixture:
+      ref: "post-create.yaml"
+      overrides:
+        userId: 5
+    assert:
+      - type: status
+        expected: 201
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"

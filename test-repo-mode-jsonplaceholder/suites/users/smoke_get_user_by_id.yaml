@@ -1,0 +1,19 @@
+id: "users.smoke.get-by-id"
+title: "Users smoke: use module action + schema"
+tags:
+  - smoke
+  - api
+  - users
+  - modules
+  - schema
+imports:
+  - module: jsonplaceholder
+    alias: jp
+variables:
+  targetUserId: 1
+steps:
+  - type: use
+    name: "Use action jp.getUserById"
+    action: "jp.getUserById"
+    properties:
+      userId: "{{targetUserId}}"
