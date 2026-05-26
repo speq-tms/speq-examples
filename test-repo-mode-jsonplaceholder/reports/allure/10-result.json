@@ -1,0 +1,48 @@
+{
+  "historyId": "posts.get.retry-config::suites/posts/get_post_with_retry_config.yaml",
+  "labels": [
+    {
+      "name": "framework",
+      "value": "speq-cli"
+    },
+    {
+      "name": "package",
+      "value": "suites.posts"
+    },
+    {
+      "name": "suite",
+      "value": "posts"
+    }
+  ],
+  "name": "Posts: GET post demonstrating global retry config (Feature 3)",
+  "stage": "finished",
+  "status": "passed",
+  "steps": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-10-1-body-req-1.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-10-1-body-resp-2.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-10-1-body-assert-3.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "GET /posts/1 with global retry config active",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (200)"
+      }
+    }
+  ],
+  "uuid": "run-1779827567760-10"
+}

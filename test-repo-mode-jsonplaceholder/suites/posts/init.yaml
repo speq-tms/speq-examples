@@ -1,0 +1,20 @@
+suite:
+  variables:
+    postId: 1
+  imports:
+    - module: jsonplaceholder
+      alias: jp
+  beforeEach:
+    - type: use
+      name: "Setup posts via module action"
+      action: "jp.getPostById"
+      properties:
+        postId: "{{postId}}"
+  afterEach:
+    - type: api
+      name: "Teardown posts: GET /posts/{{postId}}"
+      method: GET
+      url: "/posts/{{postId}}"
+      assert:
+        - type: status
+          expected: 200

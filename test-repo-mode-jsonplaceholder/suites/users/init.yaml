@@ -1,0 +1,19 @@
+suite:
+  variables:
+    userId: 1
+  beforeEach:
+    - type: api
+      name: "Setup users: GET /users/{{userId}}"
+      method: GET
+      url: "/users/{{userId}}"
+      assert:
+        - type: status
+          expected: 200
+  afterEach:
+    - type: api
+      name: "Teardown users: GET /users/{{userId}}"
+      method: GET
+      url: "/users/{{userId}}"
+      assert:
+        - type: status
+          expected: 200

@@ -1,0 +1,4 @@
+name: local
+baseUrl: http://localhost:5001
+headers:
+  x-source: speq-examples-jsonplaceholder

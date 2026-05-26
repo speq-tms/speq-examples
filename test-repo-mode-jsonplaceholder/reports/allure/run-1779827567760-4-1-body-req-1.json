@@ -1,0 +1,29 @@
+{
+  "method": "POST",
+  "url": "https://jsonplaceholder.typicode.com/comments",
+  "headers": {},
+  "body": {
+    "body": {
+      "gen": {
+        "maxLength": 100,
+        "minLength": 10,
+        "type": "string"
+      }
+    },
+    "email": "{{generatedEmail}}",
+    "name": {
+      "gen": {
+        "maxLength": 30,
+        "minLength": 5,
+        "type": "string"
+      }
+    },
+    "postId": {
+      "gen": {
+        "max": 100,
+        "min": 1,
+        "type": "int"
+      }
+    }
+  }
+}

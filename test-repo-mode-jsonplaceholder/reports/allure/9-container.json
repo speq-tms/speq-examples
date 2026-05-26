@@ -1,0 +1,61 @@
+{
+  "afters": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-9-1-teardown-req-10.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-9-1-teardown-resp-11.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-9-1-teardown-assert-12.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "[teardown] afterEach :: Teardown posts: GET /posts/{{postId}}",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (200)"
+      }
+    }
+  ],
+  "befores": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-9-1-setup-req-7.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-9-1-setup-resp-8.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-9-1-setup-assert-9.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "[setup] beforeEach :: GET /posts/{{postId}}",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (200)"
+      }
+    }
+  ],
+  "children": [
+    "run-1779827567760-9"
+  ],
+  "name": "Posts: get post then fetch author via module output (Feature 4)",
+  "uuid": "run-1779827567760-9-container"
+}

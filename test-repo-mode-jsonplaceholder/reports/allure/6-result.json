@@ -1,0 +1,48 @@
+{
+  "historyId": "posts.create.fixture::suites/posts/create_post_from_fixture.yaml",
+  "labels": [
+    {
+      "name": "framework",
+      "value": "speq-cli"
+    },
+    {
+      "name": "package",
+      "value": "suites.posts"
+    },
+    {
+      "name": "suite",
+      "value": "posts"
+    }
+  ],
+  "name": "Posts: create post from fixture with overrides (Feature 2)",
+  "stage": "finished",
+  "status": "passed",
+  "steps": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-6-1-body-req-1.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-6-1-body-resp-2.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-6-1-body-assert-3.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "POST /posts from fixture",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (201)"
+      }
+    }
+  ],
+  "uuid": "run-1779827567760-6"
+}

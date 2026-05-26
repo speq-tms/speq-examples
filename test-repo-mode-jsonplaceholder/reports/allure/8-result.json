@@ -1,0 +1,48 @@
+{
+  "historyId": "posts.module-output.legacy::suites/posts/get_post_legacy_use.yaml",
+  "labels": [
+    {
+      "name": "framework",
+      "value": "speq-cli"
+    },
+    {
+      "name": "package",
+      "value": "suites.posts"
+    },
+    {
+      "name": "suite",
+      "value": "posts"
+    }
+  ],
+  "name": "Posts: legacy use without as/returns (backward compat, Feature 4)",
+  "stage": "finished",
+  "status": "passed",
+  "steps": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-8-1-body-req-1.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-8-1-body-resp-2.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-8-1-body-assert-3.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "GET /posts/{{postId}}",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (200)"
+      }
+    }
+  ],
+  "uuid": "run-1779827567760-8"
+}

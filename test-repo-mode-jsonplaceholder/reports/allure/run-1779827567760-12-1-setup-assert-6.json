@@ -1,0 +1,8 @@
+[
+  {
+    "type": "status",
+    "status": "passed",
+    "message": "status assertion passed: 200",
+    "expected": 200
+  }
+]

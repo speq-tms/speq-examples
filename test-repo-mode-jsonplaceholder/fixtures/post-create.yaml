@@ -1,0 +1,8 @@
+fixture:
+  build:
+    title:
+      gen: { type: string, minLength: 10, maxLength: 50 }
+    body:
+      gen: { type: string, minLength: 20, maxLength: 200 }
+    userId:
+      gen: { type: int, min: 1, max: 10 }

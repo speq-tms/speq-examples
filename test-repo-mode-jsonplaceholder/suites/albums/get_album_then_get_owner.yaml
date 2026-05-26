@@ -1,0 +1,22 @@
+id: "albums.module-output.chain"
+title: "Albums: get album then fetch owner via module output (Feature 4)"
+tags: [api, albums, users, module-outputs]
+imports:
+  - module: jsonplaceholder
+    alias: jp
+steps:
+  - type: use
+    name: "Get album and bind result"
+    action: "jp.getAlbumById"
+    properties:
+      albumId: "1"
+    as: album
+  - type: api
+    name: "GET /users/{{album.userId}} - fetch album owner"
+    method: GET
+    url: "/users/{{album.userId}}"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/user.schema.json"

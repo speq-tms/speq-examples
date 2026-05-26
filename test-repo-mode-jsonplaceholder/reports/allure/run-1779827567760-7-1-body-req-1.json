@@ -1,0 +1,28 @@
+{
+  "method": "POST",
+  "url": "https://jsonplaceholder.typicode.com/posts",
+  "headers": {},
+  "body": {
+    "body": {
+      "gen": {
+        "maxLength": 100,
+        "minLength": 20,
+        "type": "string"
+      }
+    },
+    "title": {
+      "gen": {
+        "maxLength": 50,
+        "minLength": 10,
+        "type": "string"
+      }
+    },
+    "userId": {
+      "gen": {
+        "max": 10,
+        "min": 1,
+        "type": "int"
+      }
+    }
+  }
+}

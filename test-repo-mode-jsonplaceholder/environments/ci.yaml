@@ -1,0 +1,4 @@
+name: ci
+baseUrl: https://jsonplaceholder.typicode.com
+headers:
+  x-source: speq-examples-jsonplaceholder

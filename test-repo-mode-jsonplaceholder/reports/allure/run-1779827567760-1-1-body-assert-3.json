@@ -1,0 +1,13 @@
+[
+  {
+    "type": "status",
+    "status": "passed",
+    "message": "status assertion passed: 200",
+    "expected": 200
+  },
+  {
+    "type": "schema",
+    "status": "passed",
+    "message": "schema assertion passed (jsonplaceholder/album.schema.json)"
+  }
+]

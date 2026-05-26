@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "url": "https://jsonplaceholder.typicode.com/todos",
+  "headers": {},
+  "body": {
+    "completed": false,
+    "title": "GUVHiSolMQTkX4fQNJ",
+    "userId": 3
+  }
+}

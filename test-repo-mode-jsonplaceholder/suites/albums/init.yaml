@@ -1,0 +1,20 @@
+suite:
+  variables:
+    albumId: 1
+  imports:
+    - module: jsonplaceholder
+      alias: jp
+  beforeEach:
+    - type: use
+      name: "Setup albums via module action"
+      action: "jp.getAlbumById"
+      properties:
+        albumId: "{{albumId}}"
+  afterEach:
+    - type: api
+      name: "Teardown albums: GET /albums/{{albumId}}"
+      method: GET
+      url: "/albums/{{albumId}}"
+      assert:
+        - type: status
+          expected: 200

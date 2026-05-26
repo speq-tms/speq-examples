@@ -1,0 +1,48 @@
+{
+  "historyId": "users.smoke.get-by-id::suites/users/smoke_get_user_by_id.yaml",
+  "labels": [
+    {
+      "name": "framework",
+      "value": "speq-cli"
+    },
+    {
+      "name": "package",
+      "value": "suites.users"
+    },
+    {
+      "name": "suite",
+      "value": "users"
+    }
+  ],
+  "name": "Users smoke: use module action + schema",
+  "stage": "finished",
+  "status": "passed",
+  "steps": [
+    {
+      "attachments": [
+        {
+          "name": "request",
+          "source": "run-1779827567760-15-1-body-req-1.json",
+          "type": "application/json"
+        },
+        {
+          "name": "response",
+          "source": "run-1779827567760-15-1-body-resp-2.json",
+          "type": "application/json"
+        },
+        {
+          "name": "assertions",
+          "source": "run-1779827567760-15-1-body-assert-3.json",
+          "type": "application/json"
+        }
+      ],
+      "name": "GET /users/{{userId}}",
+      "stage": "finished",
+      "status": "passed",
+      "statusDetails": {
+        "message": "OK (200)"
+      }
+    }
+  ],
+  "uuid": "run-1779827567760-15"
+}

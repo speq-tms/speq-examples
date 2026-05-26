@@ -1,0 +1,17 @@
+version: "1"
+project: "jsonplaceholder-api-tests"
+defaultEnvironment: "ci"
+environmentsDir: "environments"
+suitesDir: "suites"
+reportsDir: "reports"
+schemasDir: "schemas"
+modulesDir: "modules"
+fixturesDir: "fixtures"
+retry:
+  enabled: true
+  maxAttempts: 3
+  delayMs: 300
+  backoff: exponential
+  retryOn:
+    networkErrors: true
+    statusCodes: [429, 502, 503, 504]

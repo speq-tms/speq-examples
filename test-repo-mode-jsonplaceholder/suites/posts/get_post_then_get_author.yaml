@@ -1,0 +1,22 @@
+id: "posts.module-output.chain"
+title: "Posts: get post then fetch author via module output (Feature 4)"
+tags: [api, posts, users, module-outputs]
+imports:
+  - module: jsonplaceholder
+    alias: jp
+steps:
+  - type: use
+    name: "Get post and bind result"
+    action: "jp.getPostById"
+    properties:
+      postId: "1"
+    as: post
+  - type: api
+    name: "GET /users/{{post.userId}} - fetch post author"
+    method: GET
+    url: "/users/{{post.userId}}"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/user.schema.json"

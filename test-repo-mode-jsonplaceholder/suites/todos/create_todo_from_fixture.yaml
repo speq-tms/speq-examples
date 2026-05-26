@@ -1,0 +1,15 @@
+id: "todos.create.fixture"
+title: "Todos: create todo from fixture with overrides (Feature 2)"
+tags: [api, todos, fixtures]
+steps:
+  - type: api
+    name: "POST /todos from fixture"
+    method: POST
+    url: "/todos"
+    bodyFromFixture:
+      ref: "todo-create.yaml"
+      overrides:
+        completed: false
+    assert:
+      - type: status
+        expected: 201
