@@ -39,6 +39,10 @@ Examples are used by:
 - GitHub runner compatibility checks;
 - extension manual verification flows.
 
+## CI secrets
+
+GitHub Actions examples generate `environments/ci.yaml` from GitHub Secrets before running SPEQ. See `docs/ci-secrets.md` for the copy-paste workflow step and recommended secret names.
+
 ## Status
 
 Bootstrap complete. Ready to add first canonical specs and envs.
