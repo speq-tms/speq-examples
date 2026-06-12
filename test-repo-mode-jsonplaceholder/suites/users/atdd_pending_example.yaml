@@ -1,0 +1,26 @@
+id: "users.atdd.pending-example"
+title: "Users ATDD: test-level pending status demonstration (Feature 5)"
+tags: [atdd, pending, users]
+status: pending
+steps:
+  - type: api
+    name: "POST /users - create user (test-level pending: feature not yet implemented)"
+    method: POST
+    url: "/users"
+    body:
+      name: Jane Doe
+      username: janedoe
+      email: jane@example.com
+    assert:
+      - type: status
+        expected: 201
+
+  - type: api
+    name: "GET /users/{{steps.create_user.response.body.id}} - fetch created user"
+    method: GET
+    url: "/users/{{steps.create_user.response.body.id}}"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/user.schema.json"
