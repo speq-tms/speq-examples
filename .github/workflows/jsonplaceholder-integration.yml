@@ -14,7 +14,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: speq-tms/speq-github-runner@main
+      - name: Materialize SPEQ CI environment
+        env:
+          SPEQ_CI_BASE_URL: ${{ secrets.SPEQ_CI_BASE_URL }}
+          SPEQ_CI_SOURCE_HEADER: ${{ secrets.SPEQ_CI_SOURCE_HEADER }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          base_url = os.environ.get("SPEQ_CI_BASE_URL") or "https://jsonplaceholder.typicode.com"
+          source = os.environ.get("SPEQ_CI_SOURCE_HEADER") or "speq-examples-jsonplaceholder"
+
+          path = Path("test-repo-mode-jsonplaceholder/environments/ci.yaml")
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(
+              "\n".join(
+                  [
+                      "name: ci",
+                      f"baseUrl: {json.dumps(base_url)}",
+                      "headers:",
+                      f"  x-source: {json.dumps(source)}",
+                      "",
+                  ]
+              ),
+              encoding="utf-8",
+          )
+          PY
+
+      - uses: speq-tms/speq-github-runner@v1
         with:
           mode: run
           speq-root: test-repo-mode-jsonplaceholder
