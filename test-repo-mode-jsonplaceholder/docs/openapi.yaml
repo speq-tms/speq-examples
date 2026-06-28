@@ -1,0 +1,159 @@
+openapi: "3.0.3"
+info:
+  title: JSONPlaceholder API
+  description: >
+    Minimal OpenAPI specification for JSONPlaceholder (https://jsonplaceholder.typicode.com).
+    Used by SPEQ coverage feature (doc 23) to track endpoint coverage against existing tests.
+  version: "1.0.0"
+  contact:
+    url: https://jsonplaceholder.typicode.com
+
+servers:
+  - url: https://jsonplaceholder.typicode.com
+
+paths:
+  /posts:
+    get:
+      summary: List all posts
+      operationId: listPosts
+      tags: [posts]
+      responses:
+        "200":
+          description: Array of post objects
+    post:
+      summary: Create a post
+      operationId: createPost
+      tags: [posts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostInput"
+      responses:
+        "201":
+          description: Created post
+
+  /posts/{id}:
+    get:
+      summary: Get a post by ID
+      operationId: getPostById
+      tags: [posts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: A single post object
+    put:
+      summary: Replace a post
+      operationId: replacePost
+      tags: [posts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostInput"
+      responses:
+        "200":
+          description: Updated post
+    patch:
+      summary: Partially update a post
+      operationId: updatePost
+      tags: [posts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostInput"
+      responses:
+        "200":
+          description: Patched post
+    delete:
+      summary: Delete a post
+      operationId: deletePost
+      tags: [posts]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Empty object (JSONPlaceholder returns 200 for DELETE)
+
+  /users:
+    get:
+      summary: List all users
+      operationId: listUsers
+      tags: [users]
+      responses:
+        "200":
+          description: Array of user objects
+    post:
+      summary: Create a user
+      operationId: createUser
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created user
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      operationId: getUserById
+      tags: [users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: A single user object
+
+components:
+  schemas:
+    PostInput:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        userId:
+          type: integer
+
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string

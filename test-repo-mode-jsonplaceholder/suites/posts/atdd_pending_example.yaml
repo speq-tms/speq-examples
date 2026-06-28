@@ -1,0 +1,50 @@
+id: "posts.atdd.pending-example"
+title: "Posts ATDD: pending status demonstration (Feature 5)"
+tags: [atdd, pending, posts]
+steps:
+  - type: api
+    name: "GET /posts/1 - read existing post"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"
+
+  - type: api
+    name: "POST /posts - create post and bind result"
+    id: created_post
+    method: POST
+    url: "/posts"
+    body:
+      title: "Acceptance test post"
+      body: "Created via SPEQ ATDD example"
+      userId: 1
+    assert:
+      - type: status
+        expected: 201
+
+  - type: api
+    name: "PUT /posts/1 - full update (pending: not yet implemented)"
+    status: pending
+    id: updated_post
+    method: PUT
+    url: "/posts/{{created_post.response.body.id}}"
+    body:
+      id: 1
+      title: "Updated title"
+      body: "Updated body"
+      userId: 1
+    assert:
+      - type: status
+        expected: 200
+
+  - type: api
+    name: "DELETE /posts/{{updated_post.response.body.id}} - cleanup (cascades pending)"
+    status: pending
+    method: DELETE
+    url: "/posts/{{updated_post.response.body.id}}"
+    assert:
+      - type: status
+        expected: 200

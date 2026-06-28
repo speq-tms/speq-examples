@@ -15,3 +15,9 @@ retry:
   retryOn:
     networkErrors: true
     statusCodes: [429, 502, 503, 504]
+
+coverage:
+  enabled: true
+  openapi: "./docs/openapi.yaml"
+  report: true
+  fail_below: null
