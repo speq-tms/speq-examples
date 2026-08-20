@@ -20,4 +20,4 @@ coverage:
   enabled: true
   openapi: "./docs/openapi.yaml"
   report: true
-  fail_below: null
+  failBelow: null
