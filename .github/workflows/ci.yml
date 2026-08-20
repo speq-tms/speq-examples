@@ -46,3 +46,60 @@ jobs:
           allure-dir: test-repo-mode-jsonplaceholder/reports/allure
           summary-output: test-repo-mode-jsonplaceholder/reports/results/summary.json
           upload-artifacts: "true"
+
+  conformance:
+    name: examples match the contracts
+    runs-on: ubuntu-latest
+    # These examples are what the published schemas are validated against, so a
+    # change here can break the contracts as easily as a change there can. Same
+    # script, run from the other side.
+    steps:
+      - name: Check out examples
+        uses: actions/checkout@v4
+
+      # The release flow keeps a same-named branch in every affected repository
+      # -- milestone title == RC branch name -- so an RC here is checked against
+      # the matching RC there.
+      #
+      # The head branch is tried first, because on the final "RC -> main" pull
+      # request it is the head that names the release candidate under test;
+      # keying off the base would check v1.1.0 against a main that predates it.
+      # Then the base, which is what a normal delivery PR into an RC carries.
+      # Then main.
+      - name: Resolve the matching speq-contracts ref
+        id: contracts
+        run: |
+          resolved=main
+          for candidate in "${{ github.head_ref }}" "${{ github.base_ref }}" "${{ github.ref_name }}"; do
+            case "$candidate" in
+              v*) ;;
+              *) continue ;;
+            esac
+            if git ls-remote --exit-code --heads \
+                 https://github.com/speq-tms/speq-contracts.git "$candidate" >/dev/null 2>&1; then
+              resolved="$candidate"
+              break
+            fi
+          done
+          echo "ref=$resolved" >> "$GITHUB_OUTPUT"
+          echo "checking against speq-contracts@$resolved"
+
+      - name: Check out contracts
+        uses: actions/checkout@v4
+        with:
+          repository: speq-tms/speq-contracts
+          ref: ${{ steps.contracts.outputs.ref }}
+          path: .contracts
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet jsonschema pyyaml referencing
+
+      - name: Check conformance
+        run: |
+          python3 .contracts/scripts/check-conformance.py \
+            --schemas .contracts/schemas \
+            --examples . \
+            --cases .contracts/tests/cases
