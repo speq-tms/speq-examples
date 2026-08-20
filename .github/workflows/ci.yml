@@ -46,3 +46,51 @@ jobs:
           allure-dir: test-repo-mode-jsonplaceholder/reports/allure
           summary-output: test-repo-mode-jsonplaceholder/reports/results/summary.json
           upload-artifacts: "true"
+
+  conformance:
+    name: examples match the contracts
+    runs-on: ubuntu-latest
+    # These examples are what the published schemas are validated against, so a
+    # change here can break the contracts as easily as a change there can. Same
+    # script, run from the other side.
+    steps:
+      - name: Check out examples
+        uses: actions/checkout@v4
+
+      # The release flow keeps a same-named branch in every affected repository
+      # -- milestone title == RC branch name. A PR into v1.1.0 here must be
+      # checked against v1.1.0 of the contracts, not against main, which
+      # predates the RC. Falls back to main outside a release candidate.
+      - name: Resolve the matching speq-contracts ref
+        id: contracts
+        run: |
+          ref="${{ github.base_ref || github.ref_name }}"
+          if [ "${ref#v}" != "$ref" ] \
+             && git ls-remote --exit-code --heads \
+                  https://github.com/speq-tms/speq-contracts.git "$ref" >/dev/null 2>&1; then
+            echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          else
+            ref=main
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+          echo "checking against speq-contracts@$ref"
+
+      - name: Check out contracts
+        uses: actions/checkout@v4
+        with:
+          repository: speq-tms/speq-contracts
+          ref: ${{ steps.contracts.outputs.ref }}
+          path: .contracts
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet jsonschema pyyaml referencing
+
+      - name: Check conformance
+        run: |
+          python3 .contracts/scripts/check-conformance.py \
+            --schemas .contracts/schemas \
+            --examples . \
+            --cases .contracts/tests/cases
