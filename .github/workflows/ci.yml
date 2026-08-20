@@ -58,22 +58,31 @@ jobs:
         uses: actions/checkout@v4
 
       # The release flow keeps a same-named branch in every affected repository
-      # -- milestone title == RC branch name. A PR into v1.1.0 here must be
-      # checked against v1.1.0 of the contracts, not against main, which
-      # predates the RC. Falls back to main outside a release candidate.
+      # -- milestone title == RC branch name -- so an RC here is checked against
+      # the matching RC there.
+      #
+      # The head branch is tried first, because on the final "RC -> main" pull
+      # request it is the head that names the release candidate under test;
+      # keying off the base would check v1.1.0 against a main that predates it.
+      # Then the base, which is what a normal delivery PR into an RC carries.
+      # Then main.
       - name: Resolve the matching speq-contracts ref
         id: contracts
         run: |
-          ref="${{ github.base_ref || github.ref_name }}"
-          if [ "${ref#v}" != "$ref" ] \
-             && git ls-remote --exit-code --heads \
-                  https://github.com/speq-tms/speq-contracts.git "$ref" >/dev/null 2>&1; then
-            echo "ref=$ref" >> "$GITHUB_OUTPUT"
-          else
-            ref=main
-            echo "ref=main" >> "$GITHUB_OUTPUT"
-          fi
-          echo "checking against speq-contracts@$ref"
+          resolved=main
+          for candidate in "${{ github.head_ref }}" "${{ github.base_ref }}" "${{ github.ref_name }}"; do
+            case "$candidate" in
+              v*) ;;
+              *) continue ;;
+            esac
+            if git ls-remote --exit-code --heads \
+                 https://github.com/speq-tms/speq-contracts.git "$candidate" >/dev/null 2>&1; then
+              resolved="$candidate"
+              break
+            fi
+          done
+          echo "ref=$resolved" >> "$GITHUB_OUTPUT"
+          echo "checking against speq-contracts@$resolved"
 
       - name: Check out contracts
         uses: actions/checkout@v4
