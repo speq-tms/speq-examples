@@ -4,7 +4,7 @@ tags:
   - smoke
   - api
 variables:
-  targetPath: "/status/200"
+  targetPath: "/posts/1"
 steps:
   - type: api
     name: "GET health"

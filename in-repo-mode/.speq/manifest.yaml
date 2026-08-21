@@ -4,3 +4,15 @@ defaultEnvironment: "ci"
 environmentsDir: "environments"
 suitesDir: "suites"
 reportsDir: "reports"
+
+# This fixture is the parity gate for every speq-cli pull request, so it must not
+# fail because a third-party endpoint had a bad second. Same settings as
+# test-repo-mode-jsonplaceholder, which rides out conditions this one did not.
+retry:
+  enabled: true
+  maxAttempts: 3
+  delayMs: 300
+  backoff: exponential
+  retryOn:
+    networkErrors: true
+    statusCodes: [429, 502, 503, 504]
