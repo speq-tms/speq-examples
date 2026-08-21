@@ -42,7 +42,6 @@ steps:
 
   - type: api
     name: "DELETE /posts/{{updated_post.response.body.id}} - cleanup (cascades pending)"
-    status: pending
     method: DELETE
     url: "/posts/{{updated_post.response.body.id}}"
     assert:
