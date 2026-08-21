@@ -1,0 +1,27 @@
+id: "http.transport.timeout-policy"
+title: "HTTP: request timeout policy is applied and honoured (Feature: transport config)"
+tags: [api, http, transport]
+steps:
+  - type: api
+    name: "GET /posts/1 within the manifest-wide timeout budget"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"
+
+  - type: api
+    name: "GET /users/1 with a step timeout narrowing the manifest budget"
+    # The narrowest level wins: this step overrides manifest http.timeoutMs.
+    # 10s is comfortably above a healthy JSONPlaceholder response, so the
+    # override is exercised without making the test time-sensitive.
+    method: GET
+    url: "/users/1"
+    timeoutMs: 10000
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/user.schema.json"

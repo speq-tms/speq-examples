@@ -52,6 +52,22 @@ Examples are used by:
 - GitHub runner compatibility checks;
 - extension manual verification flows.
 
+## Negative acceptance tests
+
+Some behaviour can only be demonstrated by a run that fails. Those cases live outside `suitesDir` so the
+green suite stays green, and a script asserts the failure is the one intended:
+
+| Script | Asserts |
+| --- | --- |
+| `scripts/at-http-timeout.sh` | A request that outlives its `timeoutMs` budget aborts the run quickly with a message naming the budget, instead of hanging. Covers `speq-tms/speq-docs#59`. |
+
+```bash
+SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
+```
+
+They need a `speq` binary that supports the feature under test, so they are run manually (or against a
+locally built CLI) until the corresponding release ships.
+
 ## CI secrets
 
 GitHub Actions examples generate `environments/ci.yaml` from GitHub Secrets before running SPEQ. See `docs/ci-secrets.md` for the copy-paste workflow step and recommended secret names.

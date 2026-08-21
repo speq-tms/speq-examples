@@ -7,6 +7,13 @@ reportsDir: "reports"
 schemasDir: "schemas"
 modulesDir: "modules"
 fixturesDir: "fixtures"
+# Transport policy for every outbound request. Narrowed per environment via an
+# `http` block in environments/<env>.yaml, and per step via `timeoutMs`.
+http:
+  timeoutMs: 15000
+  connectTimeoutMs: 5000
+  followRedirects: true
+
 retry:
   enabled: true
   maxAttempts: 3
