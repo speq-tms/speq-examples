@@ -1,0 +1,22 @@
+# Negative acceptance test for the request timeout.
+#
+# It lives outside `suitesDir` on purpose: the step below is *expected* to fail,
+# so it must not run as part of the green suite. `scripts/at-http-timeout.sh`
+# runs it explicitly with `--suite negative-suites` and asserts that the run
+# fails fast, with a message naming the budget, instead of hanging.
+#
+# A 1 ms budget is a request the endpoint cannot possibly meet — the same
+# condition as a service that accepts the connection and never answers, but
+# deterministic and without depending on a delay endpoint.
+id: "http.transport.timeout-fails-fast"
+title: "HTTP: a request that outlives its budget fails fast (Feature: transport config)"
+tags: [api, http, transport, negative]
+steps:
+  - type: api
+    name: "GET /posts/1 with a 1ms budget the service cannot meet"
+    method: GET
+    url: "/posts/1"
+    timeoutMs: 1
+    assert:
+      - type: status
+        expected: 200
