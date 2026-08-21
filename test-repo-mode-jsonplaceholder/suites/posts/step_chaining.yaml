@@ -1,0 +1,37 @@
+id: "posts.step-chaining"
+title: "Posts: reuse a step response in later steps of the same test"
+tags: [api, posts, users, step-outputs]
+steps:
+  - type: api
+    name: "GET /posts/1 - read a post and bind its response"
+    id: post
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"
+
+  - type: api
+    name: "GET /users/{{post.response.body.userId}} - fetch the author by the bound userId"
+    method: GET
+    url: "/users/{{post.response.body.userId}}"
+    assert:
+      - type: status
+        expected: 200
+      - type: schema
+        ref: "jsonplaceholder/user.schema.json"
+
+  - type: api
+    name: "PATCH /posts/{{post.response.body.id}} - update the post by its bound id"
+    method: PATCH
+    url: "/posts/{{post.response.body.id}}"
+    body:
+      title: "Updated through a chained step"
+    assert:
+      - type: status
+        expected: 200
+      - type: json
+        path: "$.title"
+        expected: "Updated through a chained step"
