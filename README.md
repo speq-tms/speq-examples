@@ -52,17 +52,20 @@ Examples are used by:
 - GitHub runner compatibility checks;
 - extension manual verification flows.
 
-## Negative acceptance tests
+## Scripted acceptance tests
 
-Some behaviour can only be demonstrated by a run that fails. Those cases live outside `suitesDir` so the
-green suite stays green, and a script asserts the failure is the one intended:
+Some behaviour cannot be shown by a green run alone — either the case has to fail, or the check is about
+what does *not* appear in the output. Those live under `scripts/`, and where a failing test is involved it
+sits outside `suitesDir` so the green suite stays green:
 
 | Script | Asserts |
 | --- | --- |
 | `scripts/at-http-timeout.sh` | A request that outlives its `timeoutMs` budget aborts the run quickly with a message naming the budget, instead of hanging. Covers `speq-tms/speq-docs#59`. |
+| `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
+SPEQ_BIN=/path/to/speq ./scripts/at-env-secrets.sh
 ```
 
 They need a `speq` binary that supports the feature under test, so they are run manually (or against a
