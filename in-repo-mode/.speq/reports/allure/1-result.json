@@ -1,0 +1,20 @@
+{
+  "historyId": "smoke.health",
+  "labels": [
+    {
+      "name": "framework",
+      "value": "speq-cli"
+    },
+    {
+      "name": "suite",
+      "value": "api"
+    }
+  ],
+  "name": "smoke.health",
+  "stage": "finished",
+  "status": "passed",
+  "statusDetails": {
+    "message": ""
+  },
+  "uuid": "report-1787316325406-1"
+}

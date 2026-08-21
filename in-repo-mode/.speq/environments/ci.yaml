@@ -1,4 +1,4 @@
 name: ci
-baseUrl: https://httpbin.org
+baseUrl: https://jsonplaceholder.typicode.com
 headers:
   x-source: speq-examples
