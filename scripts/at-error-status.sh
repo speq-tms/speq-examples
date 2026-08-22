@@ -29,8 +29,10 @@ cp -R "$ROOT" "$run_root"
 rm -rf "$run_root/reports"
 
 set +e
+# `negative-suites/` also holds the failure-semantics cases (#63), which are a
+# different question. The tag selects only the three this test is about.
 "$SPEQ" run --speq-root "$run_root" --env "$ENV_NAME" --suite negative-suites \
-  --report all --output "$summary" >"$workdir/run.out" 2>&1
+  --tags error-status --report all --output "$summary" >"$workdir/run.out" 2>&1
 exit_code=$?
 set -e
 

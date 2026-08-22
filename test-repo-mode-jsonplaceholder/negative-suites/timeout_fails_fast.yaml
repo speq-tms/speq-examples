@@ -10,7 +10,7 @@
 # deterministic and without depending on a delay endpoint.
 id: "http.transport.timeout-fails-fast"
 title: "HTTP: a request that outlives its budget fails fast (Feature: transport config)"
-tags: [api, http, transport, negative]
+tags: [api, http, transport, negative, error-status]
 steps:
   - type: api
     name: "GET /posts/1 with a 1ms budget the service cannot meet"

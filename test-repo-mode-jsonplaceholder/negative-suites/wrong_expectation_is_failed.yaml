@@ -6,7 +6,7 @@
 # run of `negative-suites` shows both statuses at once.
 id: "http.status.wrong-expectation-is-failed"
 title: "HTTP: a wrong expectation against a reachable service stays failed (Feature: error status)"
-tags: [api, http, negative]
+tags: [api, http, negative, error-status]
 steps:
   - type: api
     name: "GET /posts/1 and expect a status it will not return"

@@ -1,0 +1,32 @@
+# The override for the rule next door — speq-tms/speq-docs#63.
+#
+# `continueOnError: true` is how an author says this particular failure is not a
+# reason to stop. It does not erase the failure: the step is still reported
+# failed and the test still fails. What it buys is the step after it.
+id: "failure.tolerated-failure-keeps-the-group-going"
+title: "Failures: continueOnError keeps the group running past a failure (Feature: failure semantics)"
+tags: [api, http, negative, failure-semantics]
+steps:
+  - type: api
+    name: "GET /posts/1 with a wrong expectation the author tolerates"
+    method: GET
+    url: "/posts/1"
+    continueOnError: true
+    assert:
+      - type: status
+        expected: 418
+  - type: api
+    name: "GET /posts/2 — the step that still matters"
+    method: GET
+    url: "/posts/2"
+    assert:
+      - type: status
+        expected: 200
+cleanup:
+  - type: api
+    name: "DELETE /posts/2 — cleanup runs anyway"
+    method: DELETE
+    url: "/posts/2"
+    assert:
+      - type: status
+        expected: 200
