@@ -52,45 +52,44 @@ Examples are used by:
 - GitHub runner compatibility checks;
 - extension manual verification flows.
 
+## Which binary the gate runs
+
+`test-repo-mode-jsonplaceholder/` is the acceptance gate for `speq-cli`, so the binary it runs on decides
+what the gate can prove.
+
+| Situation | Binary |
+| --- | --- |
+| A pull request whose head or base names a release candidate (`v*`) that exists in `speq-cli` | built from that branch with `cargo build --release` |
+| Anything else, including `main` | the released CLI, installed by `speq-tms/speq-github-runner@v1` |
+
+The release candidate is resolved head → base → ref, the same way the conformance job resolves the
+matching `speq-contracts` ref. So an example demonstrating unreleased runtime belongs in `suites/` like any
+other: the pull request that adds it is a pull request into the RC, and the gate builds that RC.
+
+On `main` the gate deliberately falls back to the released CLI — a release still has to work with what
+users actually install. That makes the rollout order load-bearing: `speq-cli` is released before
+`speq-examples` merges into `main`, and if it is not, this gate is what says so.
+
 ## Scripted acceptance tests
 
 Some behaviour cannot be shown by a green run alone — either the case has to fail, or the check is about
-what does *not* appear in the output. Those live under `scripts/`, and where a failing test is involved it
-sits outside `suitesDir` so the green suite stays green:
+what does *not* appear in the output. Those live under `scripts/`, run in the gate on whichever binary was
+resolved above, and where a failing test is involved it sits outside `suitesDir` so the green suite stays
+green:
 
 | Script | Asserts |
 | --- | --- |
 | `scripts/at-http-timeout.sh` | A request that outlives its `timeoutMs` budget aborts the run quickly with a message naming the budget, instead of hanging. Covers `speq-tms/speq-docs#59`. |
 | `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
-| `scripts/at-rc-suites.sh` | Everything in `rc-suites/` passes. |
-
-### `rc-suites/` is debt, not a pattern — do not add to it
-
-> **Nothing may be added to `rc-suites/`.** It is scheduled for deletion by
-> [`speq-tms/speq-docs#95`](https://github.com/speq-tms/speq-docs/issues/95), which is the next issue on the
-> v1.2.0 milestone. A new acceptance example belongs in `suites/`; if it fails there, that is #95 to fix,
-> not a file to route around it.
-
-The workflows install the **released** `speq`, so the acceptance gate checks the examples against the last
-release rather than against the release candidate they belong to. An example demonstrating an unreleased
-feature therefore turns CI red under a binary that does not have the feature.
-
-That is a defect in the gate, not in the example. `rc-suites/` was introduced to keep CI green while the
-gate is wrong, and it is wrong on its own terms: an acceptance example the acceptance gate never runs is
-not an acceptance test. #95 points the gate at a CLI built from the matching RC branch, moves everything
-here into `suites/`, and removes this directory along with `scripts/at-rc-suites.sh` and this section.
-
-`negative-suites/` is unaffected and stays. A test that is *meant* to fail cannot live in a suite required
-to report `"failed": 0`, whichever binary runs it — that is a property of the test, not of the gate.
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-env-secrets.sh
-SPEQ_BIN=/path/to/speq ./scripts/at-rc-suites.sh
 ```
 
-They need a `speq` binary that supports the feature under test, so they are run manually (or against a
-locally built CLI) until the corresponding release ships.
+`negative-suites/` holds the failing case the first script drives. A test that is *meant* to fail cannot
+live in a suite required to report `"failed": 0` — that is a property of the test, not of the gate, so it
+stays outside `suitesDir` whichever binary runs it.
 
 ## CI secrets
 

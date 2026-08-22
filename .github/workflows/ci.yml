@@ -37,7 +37,85 @@ jobs:
           )
           PY
 
-      - uses: speq-tms/speq-github-runner@v1
+      # These examples are the acceptance gate for `speq-cli`, so the binary
+      # they run on decides what the gate can prove. Installing the released CLI
+      # checks the examples against the *last* release, which means an example
+      # demonstrating unreleased runtime cannot be committed until after the
+      # release it documents -- backwards, since the example exists to prove the
+      # release candidate first.
+      #
+      # So: on a pull request that names a release candidate, build the CLI from
+      # the matching RC branch. Resolved exactly the way the conformance job
+      # below resolves speq-contracts -- head, then base, then the ref itself.
+      # On `main` nothing resolves and the released CLI is used, so a release
+      # still has to work with what users actually install.
+      - name: Resolve the matching speq-cli ref
+        id: cli
+        run: |
+          resolved=main
+          for candidate in "${{ github.head_ref }}" "${{ github.base_ref }}" "${{ github.ref_name }}"; do
+            case "$candidate" in
+              v*) ;;
+              *) continue ;;
+            esac
+            if git ls-remote --exit-code --heads \
+                 https://github.com/speq-tms/speq-cli.git "$candidate" >/dev/null 2>&1; then
+              resolved="$candidate"
+              break
+            fi
+          done
+          echo "ref=$resolved" >> "$GITHUB_OUTPUT"
+          if [ "$resolved" = main ]; then
+            echo "no release candidate in play -- running the released CLI"
+          else
+            echo "building the CLI from speq-cli@$resolved"
+          fi
+
+      - name: Check out the release candidate
+        if: steps.cli.outputs.ref != 'main'
+        uses: actions/checkout@v4
+        with:
+          repository: speq-tms/speq-cli
+          ref: ${{ steps.cli.outputs.ref }}
+          path: .cli
+
+      - name: Cache the release-candidate build
+        if: steps.cli.outputs.ref != 'main'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            .cli/target
+          key: speq-cli-${{ runner.os }}-${{ steps.cli.outputs.ref }}-${{ hashFiles('.cli/Cargo.lock') }}
+          restore-keys: |
+            speq-cli-${{ runner.os }}-${{ steps.cli.outputs.ref }}-
+            speq-cli-${{ runner.os }}-
+
+      - name: Build the release candidate
+        if: steps.cli.outputs.ref != 'main'
+        run: |
+          cargo build --release --locked --manifest-path .cli/Cargo.toml
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 .cli/target/release/speq "$HOME/.local/bin/speq"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # Same sequence the runner action performs in `run` mode -- validate, run,
+      # render -- against the binary built above.
+      - name: Run the examples on the release candidate
+        if: steps.cli.outputs.ref != 'main'
+        run: |
+          set -o pipefail
+          root=test-repo-mode-jsonplaceholder
+          summary="$root/reports/results/summary.json"
+          mkdir -p "$(dirname "$summary")"
+          speq validate --speq-root "$root"
+          speq run --speq-root "$root" --env ci --report summary --output "$summary"
+          speq report --speq-root "$root" --format allure --summary "$summary"
+
+      - name: Run the examples on the released CLI
+        if: steps.cli.outputs.ref == 'main'
+        uses: speq-tms/speq-github-runner@v1
         with:
           mode: run
           speq-root: test-repo-mode-jsonplaceholder
@@ -46,6 +124,24 @@ jobs:
           allure-dir: test-repo-mode-jsonplaceholder/reports/allure
           summary-output: test-repo-mode-jsonplaceholder/reports/results/summary.json
           upload-artifacts: "true"
+
+      # A green run cannot show a request that has to fail, nor a secret that has
+      # to be absent from the output. Those checks live under `scripts/` and are
+      # asserted here, on whichever binary the steps above resolved.
+      - name: Run the scripted acceptance tests
+        run: |
+          SPEQ_BIN="$(command -v speq)" ./scripts/at-http-timeout.sh
+          SPEQ_BIN="$(command -v speq)" ./scripts/at-env-secrets.sh
+
+      - name: Upload the release-candidate run
+        if: ${{ always() && steps.cli.outputs.ref != 'main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: speq-jsonplaceholder-rc
+          path: |
+            test-repo-mode-jsonplaceholder/reports/results/summary.json
+            test-repo-mode-jsonplaceholder/reports/allure
+          if-no-files-found: warn
 
   conformance:
     name: examples match the contracts
