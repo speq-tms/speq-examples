@@ -1,0 +1,64 @@
+# create -> read back -> compare, the shape that was inexpressible until
+# assert.expected started rendering templates (speq-tms/speq-docs#62).
+#
+# This file lives in rc-suites/ rather than suites/ because it needs runtime
+# that is not in the released CLI yet, and the workflows install the release.
+# scripts/at-rc-suites.sh runs it against a locally built binary. It moves into
+# suites/ once v1.2.0 ships -- or sooner, if the examples gate starts building
+# the CLI from the matching RC branch (speq-tms/speq-docs#95).
+#
+# JSONPlaceholder is a fake API: it echoes a POST and assigns id 101, but does
+# not persist it, so the read-back step reads a resource that exists rather than
+# the one just created. What is being demonstrated is the comparison — an
+# assertion whose expected value comes from an earlier step's response.
+id: "posts.create-read-compare"
+title: "Posts: create, read back, and compare against captured values (Feature: templated assertions)"
+tags: [api, posts, chaining]
+variables:
+  newTitle: "speq round-trip title"
+steps:
+  - type: api
+    id: created
+    name: "POST /posts - create a post"
+    method: POST
+    url: "/posts"
+    body:
+      title: "{{newTitle}}"
+      body: "created by the speq acceptance suite"
+      userId: 1
+    assert:
+      - type: status
+        expected: 201
+      # A captured *string* field: the title comes back as it was sent.
+      - type: json
+        path: "$.title"
+        expected: "{{newTitle}}"
+
+  - type: api
+    id: readBack
+    name: "GET /posts/{{created.response.body.userId}} - read back"
+    method: GET
+    url: "/posts/{{created.response.body.userId}}"
+    assert:
+      - type: status
+        expected: 200
+      # A captured *number*: this passes only because the placeholder resolves
+      # to 1 rather than to the string "1".
+      - type: json
+        path: "$.userId"
+        expected: "{{created.response.body.userId}}"
+      - type: schema
+        ref: "jsonplaceholder/post.schema.json"
+
+  - type: api
+    name: "GET /posts/1 - compare against the id captured from the read-back"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+      - type: json
+        path: "$.id"
+        expected: "{{readBack.response.body.id}}"
+      - type: contains
+        expected: "{{readBack.response.body.title}}"
