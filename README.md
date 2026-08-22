@@ -64,16 +64,24 @@ sits outside `suitesDir` so the green suite stays green:
 | `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
 | `scripts/at-rc-suites.sh` | Everything in `rc-suites/` passes. |
 
-### Why `rc-suites/` exists
+### `rc-suites/` is debt, not a pattern — do not add to it
+
+> **Nothing may be added to `rc-suites/`.** It is scheduled for deletion by
+> [`speq-tms/speq-docs#95`](https://github.com/speq-tms/speq-docs/issues/95), which is the next issue on the
+> v1.2.0 milestone. A new acceptance example belongs in `suites/`; if it fails there, that is #95 to fix,
+> not a file to route around it.
 
 The workflows install the **released** `speq`, so the acceptance gate checks the examples against the last
 release rather than against the release candidate they belong to. An example demonstrating an unreleased
-feature therefore turns CI red until the release catches up.
+feature therefore turns CI red under a binary that does not have the feature.
 
-Such examples live in `rc-suites/`, outside `suitesDir`, and run against a locally built binary. The
-directory is temporary by construction: each file moves into `suites/` once the release carrying its
-feature ships — or sooner, if the gate starts building the CLI from the matching RC branch
-(`speq-tms/speq-docs#95`).
+That is a defect in the gate, not in the example. `rc-suites/` was introduced to keep CI green while the
+gate is wrong, and it is wrong on its own terms: an acceptance example the acceptance gate never runs is
+not an acceptance test. #95 points the gate at a CLI built from the matching RC branch, moves everything
+here into `suites/`, and removes this directory along with `scripts/at-rc-suites.sh` and this section.
+
+`negative-suites/` is unaffected and stays. A test that is *meant* to fail cannot live in a suite required
+to report `"failed": 0`, whichever binary runs it — that is a property of the test, not of the gate.
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh

@@ -6,8 +6,10 @@
 # catches up. Those examples live in `rc-suites/`, outside `suitesDir`, and are
 # run here against a locally built binary instead.
 #
-# This directory is temporary by construction. Everything in it belongs in
-# `suites/` once the release that carries its feature ships.
+# DO NOT ADD TO `rc-suites/`. This script and that directory are debt, scheduled
+# for deletion by speq-tms/speq-docs#95, which points the gate at a CLI built
+# from the matching RC branch. A new acceptance example belongs in `suites/`; if
+# it fails there, that is #95 to fix, not a reason to route around it.
 set -euo pipefail
 
 SPEQ="${SPEQ_BIN:-speq}"

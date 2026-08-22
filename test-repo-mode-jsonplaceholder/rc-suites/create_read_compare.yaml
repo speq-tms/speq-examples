@@ -3,9 +3,10 @@
 #
 # This file lives in rc-suites/ rather than suites/ because it needs runtime
 # that is not in the released CLI yet, and the workflows install the release.
-# scripts/at-rc-suites.sh runs it against a locally built binary. It moves into
-# suites/ once v1.2.0 ships -- or sooner, if the examples gate starts building
-# the CLI from the matching RC branch (speq-tms/speq-docs#95).
+# scripts/at-rc-suites.sh runs it against a locally built binary. That is debt,
+# not a pattern: speq-tms/speq-docs#95 points the gate at a CLI built from the
+# matching RC branch and moves this file into suites/, where it belongs. Do not
+# add anything else here.
 #
 # JSONPlaceholder is a fake API: it echoes a POST and assigns id 101, but does
 # not persist it, so the read-back step reads a resource that exists rather than
