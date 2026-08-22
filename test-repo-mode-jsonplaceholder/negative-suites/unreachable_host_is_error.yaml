@@ -11,7 +11,7 @@
 # asserts the two are reported differently.
 id: "http.status.unreachable-is-error"
 title: "HTTP: an unreachable service is reported as error, not failed (Feature: error status)"
-tags: [api, http, transport, negative]
+tags: [api, http, transport, negative, error-status]
 steps:
   - type: api
     name: "GET a port nothing is listening on"

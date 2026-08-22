@@ -1,0 +1,34 @@
+# Preconditions decide whether the body means anything — speq-tms/speq-docs#63.
+#
+# `setup` states what has to hold before the test is a test of anything. When it
+# does not hold, running the body would not produce evidence about the service,
+# only noise, so the body is reported `skipped` and never sent.
+#
+# `cleanup` still runs: setup may have created something before it failed.
+id: "failure.setup-failure-skips-the-body"
+title: "Failures: a failed setup skips the body and still runs cleanup (Feature: failure semantics)"
+tags: [api, http, negative, failure-semantics]
+setup:
+  - type: api
+    name: "GET /posts/1 — a precondition that does not hold"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 418
+steps:
+  - type: api
+    name: "GET /posts/1 — the actual check, never reached"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+cleanup:
+  - type: api
+    name: "DELETE /posts/1 — cleanup runs anyway"
+    method: DELETE
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200

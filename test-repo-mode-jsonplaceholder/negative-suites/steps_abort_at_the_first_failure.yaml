@@ -1,0 +1,42 @@
+# One failure, one finding — speq-tms/speq-docs#63.
+#
+# The second step asks JSONPlaceholder for a status it will never return. Before
+# #63 the third step went out anyway, and every step depending on the second one
+# failed with it, burying the actual cause. Now the group ends at the failure and
+# the third step is reported `skipped`: named in the report, absent from the
+# network, and carrying no verdict of its own.
+#
+# `cleanup` runs regardless — that is the whole point of cleanup.
+id: "failure.steps-abort-at-the-first-failure"
+title: "Failures: a failing step ends its group and the rest is skipped (Feature: failure semantics)"
+tags: [api, http, negative, failure-semantics]
+steps:
+  - type: api
+    name: "GET /posts/1 — this one holds"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200
+  - type: api
+    name: "GET /posts/2 and expect a status it will not return"
+    method: GET
+    url: "/posts/2"
+    assert:
+      - type: status
+        expected: 418
+  - type: api
+    name: "GET /posts/3 — must never be sent"
+    method: GET
+    url: "/posts/3"
+    assert:
+      - type: status
+        expected: 200
+cleanup:
+  - type: api
+    name: "DELETE /posts/1 — cleanup runs anyway"
+    method: DELETE
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 200

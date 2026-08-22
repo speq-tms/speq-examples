@@ -132,6 +132,7 @@ jobs:
         run: |
           SPEQ_BIN="$(command -v speq)" ./scripts/at-http-timeout.sh
           SPEQ_BIN="$(command -v speq)" ./scripts/at-error-status.sh
+          SPEQ_BIN="$(command -v speq)" ./scripts/at-failure-semantics.sh
           SPEQ_BIN="$(command -v speq)" ./scripts/at-env-secrets.sh
 
       - name: Upload the release-candidate run
