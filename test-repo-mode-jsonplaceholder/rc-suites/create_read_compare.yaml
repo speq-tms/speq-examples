@@ -1,6 +1,12 @@
 # create -> read back -> compare, the shape that was inexpressible until
 # assert.expected started rendering templates (speq-tms/speq-docs#62).
 #
+# This file lives in rc-suites/ rather than suites/ because it needs runtime
+# that is not in the released CLI yet, and the workflows install the release.
+# scripts/at-rc-suites.sh runs it against a locally built binary. It moves into
+# suites/ once v1.2.0 ships -- or sooner, if the examples gate starts building
+# the CLI from the matching RC branch (speq-tms/speq-docs#95).
+#
 # JSONPlaceholder is a fake API: it echoes a POST and assigns id 101, but does
 # not persist it, so the read-back step reads a resource that exists rather than
 # the one just created. What is being demonstrated is the comparison — an

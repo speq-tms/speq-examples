@@ -62,10 +62,23 @@ sits outside `suitesDir` so the green suite stays green:
 | --- | --- |
 | `scripts/at-http-timeout.sh` | A request that outlives its `timeoutMs` budget aborts the run quickly with a message naming the budget, instead of hanging. Covers `speq-tms/speq-docs#59`. |
 | `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
+| `scripts/at-rc-suites.sh` | Everything in `rc-suites/` passes. |
+
+### Why `rc-suites/` exists
+
+The workflows install the **released** `speq`, so the acceptance gate checks the examples against the last
+release rather than against the release candidate they belong to. An example demonstrating an unreleased
+feature therefore turns CI red until the release catches up.
+
+Such examples live in `rc-suites/`, outside `suitesDir`, and run against a locally built binary. The
+directory is temporary by construction: each file moves into `suites/` once the release carrying its
+feature ships — or sooner, if the gate starts building the CLI from the matching RC branch
+(`speq-tms/speq-docs#95`).
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-env-secrets.sh
+SPEQ_BIN=/path/to/speq ./scripts/at-rc-suites.sh
 ```
 
 They need a `speq` binary that supports the feature under test, so they are run manually (or against a
