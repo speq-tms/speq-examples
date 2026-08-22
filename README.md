@@ -80,14 +80,16 @@ green:
 | Script | Asserts |
 | --- | --- |
 | `scripts/at-http-timeout.sh` | A request that outlives its `timeoutMs` budget aborts the run quickly with a message naming the budget, instead of hanging. Covers `speq-tms/speq-docs#59`. |
+| `scripts/at-error-status.sh` | An unreachable service and a blown timeout are reported as `error` — no answer arrived — while a wrong expectation against a live service stays `failed`, in `summary.json` and as `broken` in Allure. Covers `speq-tms/speq-docs#64`. |
 | `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
+SPEQ_BIN=/path/to/speq ./scripts/at-error-status.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-env-secrets.sh
 ```
 
-`negative-suites/` holds the failing case the first script drives. A test that is *meant* to fail cannot
+`negative-suites/` holds the cases the first two scripts drive. A test that is *meant* to fail cannot
 live in a suite required to report `"failed": 0` — that is a property of the test, not of the gate, so it
 stays outside `suitesDir` whichever binary runs it.
 

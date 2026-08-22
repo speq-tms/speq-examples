@@ -22,7 +22,10 @@ fail() { echo "FAIL: $1" >&2; exit 1; }
 
 started=$(date +%s)
 set +e
-"$SPEQ" run --speq-root "$ROOT" --env "$ENV_NAME" --suite negative-suites \
+# One file, not the whole directory: `negative-suites/` also holds the cases
+# for the `error` status, which `scripts/at-error-status.sh` owns.
+"$SPEQ" run --speq-root "$ROOT" --env "$ENV_NAME" \
+  --test negative-suites/timeout_fails_fast.yaml \
   --report summary --output "$summary"
 exit_code=$?
 set -e
@@ -38,7 +41,10 @@ import sys
 
 summary = json.load(open(sys.argv[1]))
 totals = summary["totals"]
-assert totals["failed"] == 1, f"expected exactly one failed test, got {totals}"
+# A request that never returned is an `error`, not a `failed` expectation --
+# there was no answer to judge (speq-tms/speq-docs#64).
+assert totals.get("error") == 1, f"expected exactly one errored test, got {totals}"
+assert totals.get("failed", 0) == 0, f"a timeout is not an assertion failure, got {totals}"
 assert totals["passed"] == 0, f"nothing may pass in the negative suite, got {totals}"
 
 messages = [t.get("message") or "" for t in summary["tests"]]
