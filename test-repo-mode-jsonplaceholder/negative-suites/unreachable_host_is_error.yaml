@@ -1,0 +1,25 @@
+# Negative acceptance test for the `error` status (speq-tms/speq-docs#64).
+#
+# It lives outside `suitesDir` because it is *expected* not to pass: a run
+# containing an error exits non-zero, so it cannot sit in a suite required to
+# report a clean result.
+#
+# Port 9 is the discard port. Nothing listens on it, so the connection is
+# refused and no response ever arrives — which is exactly the condition the
+# `error` status exists to name: "the service is not running", as opposed to
+# "the service answered something unexpected". `scripts/at-error-status.sh`
+# asserts the two are reported differently.
+id: "http.status.unreachable-is-error"
+title: "HTTP: an unreachable service is reported as error, not failed (Feature: error status)"
+tags: [api, http, transport, negative]
+steps:
+  - type: api
+    name: "GET a port nothing is listening on"
+    method: GET
+    url: "http://127.0.0.1:9/orders"
+    # Bound the wait: if a firewall drops the packets instead of refusing them,
+    # the connection times out — still an error, just more slowly.
+    timeoutMs: 3000
+    assert:
+      - type: status
+        expected: 200

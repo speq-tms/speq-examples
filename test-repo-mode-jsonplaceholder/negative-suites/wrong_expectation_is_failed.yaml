@@ -1,0 +1,17 @@
+# The other side of the line drawn by speq-tms/speq-docs#64.
+#
+# JSONPlaceholder is reachable and answers 200. The expectation below is simply
+# wrong, so this is a finding about the service, not about the run — `failed`,
+# never `error`. It sits next to `unreachable_host_is_error.yaml` so a single
+# run of `negative-suites` shows both statuses at once.
+id: "http.status.wrong-expectation-is-failed"
+title: "HTTP: a wrong expectation against a reachable service stays failed (Feature: error status)"
+tags: [api, http, negative]
+steps:
+  - type: api
+    name: "GET /posts/1 and expect a status it will not return"
+    method: GET
+    url: "/posts/1"
+    assert:
+      - type: status
+        expected: 418
