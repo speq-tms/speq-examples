@@ -1,0 +1,18 @@
+# OAuth2 client credentials against a local stub — speq-tms/speq-docs#61.
+#
+# JSONPlaceholder cannot issue a token, so the flow is exercised against the
+# stub identity provider `scripts/at-auth.sh` starts. That script exports
+# SPEQ_OAUTH_STUB_URL; the ':-default' below is what keeps `speq validate`
+# working for anyone who clones the project and never runs the script.
+#
+# Nothing here is a credential in its own right. That is the shape a real
+# project uses: the file names the variables, the CI system holds the values,
+# and the repository holds neither.
+name: stub-oauth
+baseUrl: "${SPEQ_OAUTH_STUB_URL:-http://127.0.0.1:8787}"
+auth:
+  type: oauth2
+  tokenUrl: "${SPEQ_OAUTH_STUB_URL:-http://127.0.0.1:8787}/token"
+  clientId: "${SPEQ_OAUTH_CLIENT_ID:-speq-examples}"
+  clientSecret: "${SPEQ_OAUTH_CLIENT_SECRET:-stub-secret-not-a-real-credential}"
+  scopes: [orders.read]

@@ -1,0 +1,19 @@
+# Credentials for every test in this directory — speq-tms/speq-docs#61.
+#
+# Declared once here rather than as an `authorization` header on every step. A
+# suite block overrides whatever the environment set and is overridden by any
+# step that declares its own, so this is the level that says "everything under
+# here talks to the API as this caller".
+#
+# The token is read from the OS environment. The ':-default' keeps the project
+# runnable for anyone who clones it — `speq validate` reads every file in the
+# project, not only the ones a run selects — while a real project exports the
+# variable and drops the fallback.
+#
+# What the block produces is redacted for the rest of the run whether it came
+# from the environment or from that fallback: a credential is a credential
+# wherever it was read from. `scripts/at-auth.sh` asserts exactly that.
+suite:
+  auth:
+    type: bearer
+    token: "${SPEQ_DEMO_API_TOKEN:-demo-token-not-a-real-credential}"

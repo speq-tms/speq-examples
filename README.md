@@ -83,18 +83,26 @@ green:
 | `scripts/at-error-status.sh` | An unreachable service and a blown timeout are reported as `error` — no answer arrived — while a wrong expectation against a live service stays `failed`, in `summary.json` and as `broken` in Allure. Covers `speq-tms/speq-docs#64`. |
 | `scripts/at-failure-semantics.sh` | A failing step ends its group and the steps after it are reported `skipped` rather than failed and never sent; `continueOnError: true` overrides that for one step; a failed `setup` skips the body entirely; and `cleanup` runs in every one of those cases. Covers `speq-tms/speq-docs#63`. |
 | `scripts/at-env-secrets.sh` | `${VAR}` resolves from the OS environment and is redacted everywhere the run writes; `${VAR:-default}` keeps the project runnable without it; a placeholder with neither is a load-time error naming the variable and the file. Covers `speq-tms/speq-docs#60`. |
+| `scripts/at-auth.sh` | A bearer block puts the credential on the wire and `***` in the report; `auth: none` sends no `Authorization` header at all; an OAuth2 client-credentials run buys one token and presents it to every step that is due one; and neither the client secret nor the issued token survives into `summary.json` or an Allure attachment. Covers `speq-tms/speq-docs#61`. |
 
 ```bash
 SPEQ_BIN=/path/to/speq ./scripts/at-http-timeout.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-error-status.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-failure-semantics.sh
 SPEQ_BIN=/path/to/speq ./scripts/at-env-secrets.sh
+SPEQ_BIN=/path/to/speq ./scripts/at-auth.sh
 ```
 
 `negative-suites/` holds the cases those scripts drive. A test that is *meant* to fail cannot
 live in a suite required to report `"failed": 0` — that is a property of the test, not of the gate, so it
 stays outside `suitesDir` whichever binary runs it. Two questions share the directory, so each script
 selects its own cases by tag: `error-status` for `#64`, `failure-semantics` for `#63`.
+
+`stub-suites/` holds the cases that need a server this repository controls. `scripts/at-auth.sh` starts a
+stub identity provider and points `environments/stub-oauth.yaml` at it: a token endpoint is not something
+JSONPlaceholder can supply, and a flow whose whole point is *how many times the token was fetched* can only
+be checked from the receiving end. It stays outside `suitesDir` for the same reason `negative-suites/` does
+— the default `speq run --env ci` has no stub to talk to.
 
 ## CI secrets
 

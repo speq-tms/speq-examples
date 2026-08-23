@@ -134,6 +134,7 @@ jobs:
           SPEQ_BIN="$(command -v speq)" ./scripts/at-error-status.sh
           SPEQ_BIN="$(command -v speq)" ./scripts/at-failure-semantics.sh
           SPEQ_BIN="$(command -v speq)" ./scripts/at-env-secrets.sh
+          SPEQ_BIN="$(command -v speq)" ./scripts/at-auth.sh
 
       - name: Upload the release-candidate run
         if: ${{ always() && steps.cli.outputs.ref != 'main' }}
